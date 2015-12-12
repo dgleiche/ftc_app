@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 public class Wreckers extends OpMode {
-    DcMotor motorFL, motorFR, motorBL, motorBR;
+    DcMotor motorL, motorR, tilter, lift;
 
     public Wreckers() {
 
@@ -14,13 +14,13 @@ public class Wreckers extends OpMode {
 
     @Override
     public void init() {
-        motorFL = hardwareMap.dcMotor.get("motorFL");
-        motorFR = hardwareMap.dcMotor.get("motorFR");
+        motorL = hardwareMap.dcMotor.get("motorL");
+        motorR = hardwareMap.dcMotor.get("motorR");
 
-        motorBL = hardwareMap.dcMotor.get("motorBL");
-        motorBR = hardwareMap.dcMotor.get("motorBR");
+        tilter = hardwareMap.dcMotor.get("tilter");
+        lift = hardwareMap.dcMotor.get("lift");
 
-        //motorFL.setDirection(DcMotor.Direction.REVERSE);
+        motorL.setDirection(DcMotor.Direction.REVERSE);
         //motorFR.setDirection(DcMotor.Direction.REVERSE);
     }
 
@@ -54,15 +54,18 @@ public class Wreckers extends OpMode {
             left =  (float)scaleInput(left);
 
             // write the values to the motors
-            motorFR.setPower(right);
-            motorFL.setPower(left);
-
-            motorBL.setPower(left);
-            motorBR.setPower(right);
+            motorR.setPower(right);
+            motorL.setPower(left);
 
             telemetry.addData("left tgt pwr", "left  pwr: " + String.format("%.2f", left));
             telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
         }
+
+        if (gamepad1.a) tilter.setPower(1);
+        if (gamepad1.b) tilter.setPower(-1);
+
+        if (gamepad1.x) lift.setPower(1);
+        if (gamepad1.y) lift.setPower(-1);
     }
 
     @Override
@@ -71,11 +74,8 @@ public class Wreckers extends OpMode {
     }
 
     private void setMotorVals(double l, double r) {
-        motorFL.setPower(l);
-        motorFR.setPower(r);
-
-        motorBL.setPower(l);
-        motorBR.setPower(r);
+        motorL.setPower(l);
+        motorR.setPower(r);
     }
 
     /*
